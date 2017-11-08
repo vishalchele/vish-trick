@@ -1,0 +1,58 @@
+public PendinIntent pendingintent;
+SharedPreference preference = PreferenceManager.getDafaultSharedPreference(this);
+SharedPreference.Editor editor =prefernce.edit();
+int i = preference.getInt("numberoflaunches",1);
+
+if(i<2){
+
+alarmMethod();
+i++;
+editor.putInt("numberoflaunches",i);
+editor.commit();
+
+
+
+}
+private void alarmMethod()
+{
+Intent myintent =new Intent(this,NotifyService.class);
+AlarmManager alarmmanager =(AlarmManager)getSystemService(ALARM_SERVICE);
+pendingintent = PendingIntent.getService(this,0,myintent,0);
+
+Calender calender = Calender.getInstance();
+calender.set(Calender.SECOND,0);
+calender.set(Calender.MINUTE,0);
+calender.set(Calender.HOUR,0);
+calender.set(Calender.AM_PM,Calender.AM);
+calender.set(Calender.DAY_OE_MONTH,1);
+
+alarnmanager.setRepeating(AlarmManager.RTC_WAKEUP,calender.getTimeInMillis(),1000*60*60 =24,pendingintent);
+
+Toast.makt("startalarm");
+
+
+
+onBackPressed(){
+final AlertDialog.Builder builder =new AlertDialog.Builder(Mainactivity.this);
+builder.setMessage("Are u");
+builder.setCancelable(true);
+builder.setNegativeButoon("no",new DialogInterface.onClicklistener(){
+
+dialodInterface.cancel();
+
+});
+
+setpositive
+finish();
+
+AlertDialog alertdialog = builder.crate();
+alerdialog.show();
+
+
+
+}
+
+
+}
+
+
