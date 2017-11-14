@@ -1,58 +1,161 @@
-public PendinIntent pendingintent;
-SharedPreference preference = PreferenceManager.getDafaultSharedPreference(this);
-SharedPreference.Editor editor =prefernce.edit();
-int i = preference.getInt("numberoflaunches",1);
+<!doctype html>
+<html lang="en">
+  <head>
+    <title>Hello, world!</title>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-if(i<2){
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css" integrity="sha384-PsH8R72JQ3SOdhVi3uxftmaW6Vc51MKb0q5P2rRUpPvrszuE4W1povHYgTpBfshb" crossorigin="anonymous">
+  </head>
+  <body>
+    <h1>Hello, world!</h1>
 
-alarmMethod();
-i++;
-editor.putInt("numberoflaunches",i);
-editor.commit();
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js" integrity="sha384-vFJXuSJphROIrBnz7yo7oB41mKfc8JzQZiCq4NCceLEaO4IHwicKwpJf9c9IpFgh" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/js/bootstrap.min.js" integrity="sha384-alpBpkh1PFOepccYVYDB4do5UnbKysX5WZXm3XxPqe5iKTfUKjNkCk9SaVuEZflJ" crossorigin="anonymous"></script>
+  </body>
+</html>
+///insertservlet///
+import java.io.IOException;
+import java.io.PrintWriter;
+
+import java.sql.DriverManager;
 
 
+import javax.servlet.RequestDispatcher;
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+
+
+/**
+ * Servlet implementation class kachra1
+ */
+@WebServlet("/kachra1")
+public class kachra1 extends HttpServlet {
+	private static final long serialVersionUID = 1L;
+       
+    /**
+     * @see HttpServlet#HttpServlet()
+     */
+    public kachra1() {
+        super();
+        // TODO Auto-generated constructor stub
+    }
+
+	/**
+	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
+	 */
+	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		// TODO Auto-generated method stub
+	//	response.setContentType("text/html");
+	    PrintWriter pr = response.getWriter();
+	    String a = request.getParameter("txtname");
+	    String b = request.getParameter("txtnumber");
+	    String c= request.getParameter("txtemail");
+	    Connection con = null;
+	    PreparedStatement ps = null;
+		try
+		{
+			
+		    Class.forName("org.sqlite.JDBC");
+		     con = DriverManager.getConnection("jdbc:sqlite:F:\\college.db");
+		    String sql = "insert into info values('"+a+"','"+b+"','"+c+"')";
+		    ps = con.prepareStatement(sql);
+		  //  ps.setString(1, a);
+		   // ps.setString(2, b);
+		   // ps.setString(3, c);
+		    ps.executeUpdate();
+		   // pr.println("data inserted");
+		    RequestDispatcher rd=request.getRequestDispatcher("http://localhost:9999/servletstart/insertv");
+		   rd.include(request, response);
+		}catch(SQLException e)
+		{
+			System.out.println("sqlexception:"+e.getMessage());
+		} catch (ClassNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		finally{
+			try{
+				if(con!=null)
+					con.close();
+			}catch(Exception se)
+			{
+			System.out.println("sqlexception"+se.getMessage());
+		}
+		}
+	}
+
+	/**
+	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
+	 */
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		// TODO Auto-generated method stub
+	}
 
 }
-private void alarmMethod()
-{
-Intent myintent =new Intent(this,NotifyService.class);
-AlarmManager alarmmanager =(AlarmManager)getSystemService(ALARM_SERVICE);
-pendingintent = PendingIntent.getService(this,0,myintent,0);
 
-Calender calender = Calender.getInstance();
-calender.set(Calender.SECOND,0);
-calender.set(Calender.MINUTE,0);
-calender.set(Calender.HOUR,0);
-calender.set(Calender.AM_PM,Calender.AM);
-calender.set(Calender.DAY_OE_MONTH,1);
+///jsplogin//
 
-alarnmanager.setRepeating(AlarmManager.RTC_WAKEUP,calender.getTimeInMillis(),1000*60*60 =24,pendingintent);
-
-Toast.makt("startalarm");
-
-
-
-onBackPressed(){
-final AlertDialog.Builder builder =new AlertDialog.Builder(Mainactivity.this);
-builder.setMessage("Are u");
-builder.setCancelable(true);
-builder.setNegativeButoon("no",new DialogInterface.onClicklistener(){
-
-dialodInterface.cancel();
-
-});
-
-setpositive
-finish();
-
-AlertDialog alertdialog = builder.crate();
-alerdialog.show();
-
-
-
-}
-
-
-}
-
-
+<%@ page language="java" contentType="text/html; charset=ISO-8859-1"
+    pageEncoding="ISO-8859-1" import="java.sql.*" import="javax.servlet.ServletException"%>
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<title>Insert title here</title>
+</head>
+<body>
+<%
+    int ans; 
+  	String name,pass;
+     name = request.getParameter("txtName");
+     pass=request.getParameter("txtPass");
+     ans=Integer.parseInt(pass);
+     Connection con=null;
+     PreparedStatement stmt=null;
+     try{
+    	 Class.forName("org.sqlite.JDBC");
+    	 con =DriverManager.getConnection("jdbc:sqlite:F:\\college.db");
+    	 String sql ="select * from vish where name='"+name+"' and password='"+pass+"'";
+    	 stmt=con.prepareStatement(sql);
+    	 ResultSet rs=stmt.executeQuery();
+    	 if(rs.next())
+    	 {
+    		 response.sendRedirect("http://localhost:9999/JSPDB/welcom.jsp");
+    	 }
+    	 else
+    	 {
+    		 response.sendRedirect("http://localhost:9999/JSPDB/error.jsp");
+    	 }
+     }catch(SQLException se)
+     {
+    	 System.out.println("SQLException:"+se.getMessage());
+     }
+     catch(Exception e)
+     {
+    	 System.out.println("sqlexception:"+e.getMessage());
+     }
+     finally{
+    	 try{
+    		 if(con!=null)
+    			 con.close();
+    	 }catch(SQLException se)
+    	 {
+    		 System.out.println("SQLException:"+se.getMessage());
+    	 }
+     }
+%>
+</body>
+</html>
